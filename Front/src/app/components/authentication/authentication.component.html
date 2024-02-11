@@ -1,0 +1,42 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="container d-flex justify-content-center align-items-center p-lg-5 p-2">
+    <div
+      class="login d-flex justify-content-center align-items-center flex-column p-5"
+    >
+      <h1 class="mb-5">Connexion</h1>
+      <form [formGroup]="authenticationForm" (ngSubmit)="handleLogin()">
+        <div class="form-group mb-3">
+          <label for="email"><i class="bi bi-envelope-at"></i></label>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="password"><i class="bi bi-key"></i></label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            id="password"
+            placeholder="Mot de passe"
+            formControlName="password"
+          />
+        </div>
+        <button type="submit" class="btn btn-dark mb-3">Se connecter</button>
+      </form>
+      <div class="alert alert-danger" *ngIf="loginFailed">
+        {{ errorMessage }}
+      </div>
+      <!-- success -->
+      <div class="alert alert-success" *ngIf="loginSucceded">
+        {{ successMessage }}
+      </div>
+    </div>
+  </div>
+</div>

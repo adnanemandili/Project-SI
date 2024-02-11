@@ -1,0 +1,173 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Dates des Stages</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#internshipDateModal"
+        >
+          Ajouter une date de stage
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher une date de stage"
+            aria-label="Rechercher une date de stage"
+            aria-describedby="button-addon2"
+            (change)="handleSearch($event)"
+            onchange="console.log('change')"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="dates-stages d-flex justify-content-center align-items-center"
+        style="overflow-x: auto; width: 100%"
+      >
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th *ngFor="let column of displayedColumns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let internshipDate of internshipsDatesList">
+              <td>{{ internshipDate.internshipDateId }}</td>
+              <td>{{ internshipDate.internshipType }}</td>
+              <td>{{ internshipDate.numberOfWeeks }}</td>
+              <td>{{ internshipDate.year }}</td>
+              <td>{{ internshipDate.startDate }}</td>
+              <td>{{ internshipDate.endDate }}</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#internshipDateModal"
+                    (click)="handleUpdateInternshipDate(internshipDate)"
+                  >
+                    <i class="bi bi-pencil-square text-primary"></i>
+                  </a>
+                  <a
+                    type="button"
+                    (click)="
+                      deleteInternshipDate(internshipDate.internshipDateId)
+                    "
+                  >
+                    <i class="bi bi-trash text-danger"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="internshipDateModal"
+  tabindex="-1"
+  aria-labelledby="internshipDateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="internshipDateModalLabel">
+          {{ editMode ? "Modifier" : "Ajouter" }} une date de stage
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="row g-3"
+          [formGroup]="internshipsDatesForm"
+          (ngSubmit)="handleInternshipDateForm()"
+        >
+          <div class="col-md-6">
+            <label for="internshipType" class="form-label">Type de stage</label>
+            <select
+              id="internshipType"
+              class="form-select"
+              aria-label="Type de stage"
+              formControlName="internshipType"
+              required
+            >
+              <option value="" disabled selected>
+                --Choisir un type de stage--
+              </option>
+              <option value="11">Stage de 1A</option>
+              <option value="21">1er Stage de 2A</option>
+              <option value="22">2ème Stage de 2A</option>
+              <option value="31">1er Stage de 3A</option>
+              <option value="32">2ème Stage de 3A</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="year" class="form-label">Année</label>
+            <input
+              type="number"
+              class="form-control"
+              id="year"
+              formControlName="year"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="startDate" class="form-label">Date de début</label>
+            <input
+              type="date"
+              class="form-control"
+              id="startDate"
+              formControlName="startDate"
+              required
+            />
+          </div>
+          <div class="col-12">
+            <button
+              *ngIf="!editMode"
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="internshipsDatesForm.invalid"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Ajouter
+            </button>
+            <button
+              *ngIf="editMode"
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="internshipsDatesForm.invalid"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Modifier
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

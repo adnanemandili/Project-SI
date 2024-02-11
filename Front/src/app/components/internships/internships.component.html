@@ -1,0 +1,272 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Stages</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#internshipModal"
+        >
+          Ajouter un stage
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher un stage"
+            aria-label="Rechercher un stage"
+            aria-describedby="button-addon2"
+            (change)="handleSearch($event)"
+            onchange="console.log('change')"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="stages d-flex justify-content-center align-items-center"
+      >
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th *ngFor="let column of displayedColumns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let internship of internshipsList">
+              <td>{{ internship.internshipId }}</td>
+              <td>{{ internship.promo }}</td>
+              <td>{{ internship.promoNumber }}</td>
+              <td>{{ internship.student }}</td>
+              <td>{{ internship.professorId }}</td>
+              <td>{{ internship.professor }}</td>
+              <td>{{ internship.tutorNumber }}</td>
+              <td>{{ internship.tutor }}</td>
+              <td>{{ internship.siretNumber }}</td>
+              <td>{{ internship.company }}</td>
+              <td>{{ internship.internshipType }}</td>
+              <td>{{ internship.year }}</td>
+              <td>{{ internship.appreciation }}</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#internshipModal"
+                    (click)="handleUpdateInternship(internship)"
+                  >
+                    <i class="bi bi-pencil-square text-primary"></i>
+                  </a>
+                  <a
+                    type="button"
+                    (click)="deleteInternship(internship.internshipId)"
+                  >
+                    <i class="bi bi-trash text-danger"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="internshipModal"
+  tabindex="-1"
+  aria-labelledby="internshipModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="internshipModalLabel">
+          {{ editMode ? "Modifier un stage" : "Ajouter un stage" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="row g-3"
+          [formGroup]="internshipForm"
+          (ngSubmit)="handleInternshipForm()"
+        >
+          <div class="col-md-6">
+            <label for="promo" class="form-label">Promo</label>
+            <select
+              id="promo"
+              class="form-select"
+              aria-label="Promo"
+              formControlName="promo"
+              required
+            >
+              <option value="" disabled selected>--Choisir une promo--</option>
+              <option *ngFor="let promo of promosList" [value]="promo.year">
+                {{ promo.year }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="promoNumber" class="form-label">Etudiant</label>
+            <select
+              id="promoNumber"
+              class="form-select"
+              aria-label="Numéro de promo"
+              formControlName="promoNumber"
+              required
+            >
+              <option value="" disabled selected>
+                --Choisir un étudiant--
+              </option>
+              <option
+                *ngFor="let student of studentsList"
+                [value]="student.promoNumber"
+              >
+                {{ student.firstName }} {{ student.lastName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="ProfesseurId" class="form-label">Professeur</label>
+            <select
+              id="professorId"
+              class="form-select"
+              aria-label="Professeur ID"
+              formControlName="professorId"
+              required
+            >
+              <option value="" disabled selected>
+                --Choisir un professeur--
+              </option>
+              <option
+                *ngFor="let professor of professorsList"
+                [value]="professor.professorId"
+              >
+                {{ professor.firstName }} {{ professor.lastName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="tutorNumber" class="form-label">Tuteur</label>
+            <select
+              id="tutorNumber"
+              class="form-select"
+              aria-label="Numéro de tuteur"
+              formControlName="tutorNumber"
+              required
+            >
+              <option value="" disabled selected>--Choisir un tuteur--</option>
+              <option
+                *ngFor="let tutor of tutorsList"
+                [value]="tutor.tutorNumber"
+              >
+                {{ tutor.firstName }} {{ tutor.lastName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="siretNumber" class="form-label">Entreprise</label>
+            <select
+              id="siretNumber"
+              class="form-select"
+              aria-label="Numéro de SIRET"
+              formControlName="siretNumber"
+              required
+            >
+              <option value="" disabled selected>
+                --Choisir une entreprise--
+              </option>
+              <option
+                *ngFor="let company of companiesList"
+                [value]="company.siretNumber"
+              >
+                {{ company.businessName }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="internshipType" class="form-label">
+              Type de stage
+            </label>
+            <select
+              id="internshipType"
+              class="form-select"
+              aria-label="Type de stage"
+              formControlName="internshipType"
+              required
+            >
+              <option value="" disabled selected>
+                --Choisir un type de stage--
+              </option>
+              <option value="11">Stage de 1A</option>
+              <option value="21">1er Stage de 2A</option>
+              <option value="22">2ème Stage de 2A</option>
+              <option value="31">1er Stage de 3A</option>
+              <option value="32">2ème Stage de 3A</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="year" class="form-label">Année</label>
+            <input
+              type="number"
+              class="form-control"
+              id="year"
+              formControlName="year"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="appreciation" class="form-label">Appréciation</label>
+            <input
+              type="text"
+              class="form-control"
+              id="appreciation"
+              formControlName="appreciation"
+              placeholder="Appréciation"
+            />
+          </div>
+          <div class="col-12">
+            <button
+              *ngIf="!editMode"
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="internshipForm.invalid"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Ajouter
+            </button>
+            <button
+              *ngIf="editMode"
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="internshipForm.invalid"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Modifier
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

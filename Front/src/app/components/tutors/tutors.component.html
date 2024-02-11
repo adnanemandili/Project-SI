@@ -1,0 +1,198 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Tuteurs</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#tutorModal"
+        >
+          Ajouter un tuteur
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher un tuteur"
+            aria-label="Rechercher un tuteur"
+            aria-describedby="button-addon2"
+            (change)="handleSearch($event)"
+            onchange="console.log('change')"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="tuteurs d-flex justify-content-center align-items-center"
+        style="overflow-x: auto; width: 100%"
+      >
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th *ngFor="let column of displayedColumns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tutor of tutorsList">
+              <td>{{ tutor.tutorNumber }}</td>
+              <td>{{ tutor.firstName }}</td>
+              <td>{{ tutor.lastName }}</td>
+              <td>{{ tutor.gender }}</td>
+              <td>{{ tutor.tutorPhoneNumber }}</td>
+              <td>{{ tutor.siretNumber }}</td>
+              <td>{{ tutor.company }}</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#tutorModal"
+                    (click)="handleUpdateTutor(tutor)"
+                  >
+                    <i class="bi bi-pencil-square text-primary"></i>
+                  </a>
+                  <a type="button" (click)="deleteTutor(tutor.tutorNumber)">
+                    <i class="bi bi-trash text-danger"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="tutorModal"
+  tabindex="-1"
+  aria-labelledby="tutorModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="tutorModalLabel">
+          {{ editMode ? "Modifier un tuteur" : "Ajouter un tuteur" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="tutorForm" (ngSubmit)="handleTutorForm()">
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="firstName">Prénom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  formControlName="firstName"
+                  placeholder="Prénom"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="lastName">Nom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  formControlName="lastName"
+                  placeholder="Nom"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="gender">Sexe</label>
+                <select
+                  class="form-select"
+                  id="gender"
+                  formControlName="gender"
+                  required
+                >
+                  <option value="" disabled selected>
+                    --Choisir un sexe--
+                  </option>
+                  <option value="M">Masculin</option>
+                  <option value="F">Féminin</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="tutorPhoneNumber">Numéro de téléphone</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="tutorPhoneNumber"
+                  formControlName="tutorPhoneNumber"
+                  placeholder="Numéro de téléphone du tuteur"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="siretNumber">Entreprise</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  id="siretNumber"
+                  formControlName="siretNumber"
+                  required
+                >
+                  <option value="" disabled selected>
+                    --Choisir une entreprise--
+                  </option>
+                  <option
+                    *ngFor="let company of companiesList"
+                    [value]="company.siretNumber"
+                  >
+                    {{ company.businessName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button
+            *ngIf="!editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="tutorForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Ajouter
+          </button>
+          <button
+            *ngIf="editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="tutorForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Modifier
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

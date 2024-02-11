@@ -1,0 +1,35 @@
+.login {
+    margin: 0 auto;
+    width: 400px;
+    padding: 1em;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+.login .form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 0 10px 0 15px;
+}
+.login input, .login button {
+    border-radius: 5px;
+}
+.login button {
+    width: 100%;
+}
+.login input {
+    text-decoration: none;
+    border: none;
+}
+.login input:focus {
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .login {
+        width: 100%;
+    }
+    
+}

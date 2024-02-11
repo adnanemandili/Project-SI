@@ -1,0 +1,254 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Professeurs</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#professorModal"
+        >
+          Ajouter un professeur
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher un professeur"
+            aria-label="Rechercher un professeur"
+            aria-describedby="button-addon2"
+            (change)="handleSearch($event)"
+            onchange="console.log('change')"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="professors d-flex justify-content-center align-items-center"
+        style="overflow-x: auto; width: 100%"
+      >
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th *ngFor="let column of displayedColumns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let professor of professorsList">
+              <td>{{ professor.professorId }}</td>
+              <td>{{ professor.firstName }}</td>
+              <td>{{ professor.lastName }}</td>
+              <td>{{ professor.email }}</td>
+              <td>{{ professor.gender }}</td>
+              <td>{{ professor.address }}</td>
+              <td>{{ professor.city }}</td>
+              <td>{{ professor.postalCode }}</td>
+              <td>{{ professor.schoolPhoneNumber }}</td>
+              <td>{{ professor.phoneNumber }}</td>
+              <td>{{ professor.hiringDate }}</td>
+              <td>{{ professor.leavingDate }}</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#professorModal"
+                    (click)="handleUpdateProfessor(professor)"
+                  >
+                    <i class="bi bi-pencil-square text-primary"></i>
+                  </a>
+                  <a
+                    type="button"
+                    (click)="deleteProfessor(professor.professorId)"
+                  >
+                    <i class="bi bi-trash text-danger"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="professorModal"
+  tabindex="-1"
+  aria-labelledby="professorModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="professorModalLabel">
+          Ajouter un professeur
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="professorForm" (ngSubmit)="handleProfessorForm()">
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="firstName">Prénom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  placeholder="Prénom"
+                  formControlName="firstName"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="lastName">Nom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  placeholder="Nom"
+                  formControlName="lastName"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="Email"
+                  formControlName="email"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="gender">Sexe</label>
+                <select
+                  class="form-select"
+                  id="gender"
+                  formControlName="gender"
+                  required
+                >
+                  <option value="" disabled selected>
+                    --Choisir un sexe--
+                  </option>
+                  <option value="M">Masculin</option>
+                  <option value="F">Féminin</option>
+                </select>
+              </div>
+              <div class="form-group mb-3">
+                <label for="address">Adresse</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  placeholder="Adresse"
+                  formControlName="address"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="city">Ville</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="city"
+                  placeholder="Ville"
+                  formControlName="city"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="postalCode">Code Postal</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postalCode"
+                  placeholder="Code Postal"
+                  formControlName="postalCode"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="phoneNumber">Téléphone domicile</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phoneNumber"
+                  placeholder="Numéro de téléphone domicile"
+                  formControlName="phoneNumber"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="schoolPhoneNumber">Téléphone école</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="schoolPhoneNumber"
+                  placeholder="Numéro de téléphone de l'école"
+                  formControlName="schoolPhoneNumber"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="hiringDate">Date d'emboche</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="hiringDate"
+                  placeholder="Date d'emboche"
+                  formControlName="hiringDate"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="leavingDate">Date de départ</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="leavingDate"
+                  placeholder="Date de départ"
+                  formControlName="leavingDate"
+                />
+              </div>
+            </div>
+          </div>
+          <button
+            *ngIf="!editMode"
+            type="submit"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Ajouter
+          </button>
+          <button
+            *ngIf="editMode"
+            type="submit"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Modifier
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

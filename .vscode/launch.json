@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GestionnaireStageEcmApplication<gestionnaire-stage-ecm>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.gestionnairestageecm.GestionnaireStageEcmApplication",
+            "projectName": "gestionnaire-stage-ecm",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
